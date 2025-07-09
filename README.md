@@ -54,7 +54,7 @@ facturation\_console/
 | 🟦 **  Gildas** | `data_manager.py` | 📁 **Gestion des fichiers Excel** <br>• Lecture/écriture de Clients.xlsx, Produits.xlsx, CartesReduction.xlsx <br>• Validation des codes (code_client, code_produit)<br>• Utilise `pandas` + `openpyxl` |
 | 🟩 **Dev 2** | `main.py` | 💻 **Interface console + menu principal** <br>• Affichage du menu principal (1 à 4)<br>• Navigation dans les sous-menus<br>• Appel aux fonctions des autres développeurs |
 | 🟨 **Ornélie** | `client_manager.py` | 👤 **Gestion des clients** <br>• Saisie/validation d’un nouveau client (nom, contact, IFU 13 chiffres)<br>• Recherche client existant<br>• Interface entre console et `data_manager` |
-| 🟥 **Dev 4** | `facture_manager.py` | 🧾 **Génération des factures PDF + cartes de réduction** <br>• Sélection produits à facturer<br>• Calcul total HT, TTC<br>• Génération d’une **facture en PDF**<br>• Création **automatique** d'une carte de réduction selon le montant<br>• Utilise `fpdf` ou `reportlab` + `num2words` |
+| 🟥 **Fiacresse** | `facture_manager.py` | 🧾 **Génération des factures PDF + cartes de réduction** <br>• Sélection produits à facturer<br>• Calcul total HT, TTC<br>• Génération d’une **facture en PDF**<br>• Création **automatique** d'une carte de réduction selon le montant<br>• Utilise `fpdf` ou `reportlab` + `num2words` |
 | 🟪 **Dev 5** | `produit_manager.py` | 📦 **Ajout de produit** <br>• Saisie d’un nouveau produit (libellé, prix, code produit)<br>• Validation (code = 6 caractères, prix > 0)<br>• Ajout via `data_manager` |
 
 ---
