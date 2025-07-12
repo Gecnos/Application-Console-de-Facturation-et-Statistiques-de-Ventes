@@ -29,11 +29,11 @@ Ce projet vise à vous initier à :
 
 facturation\_console/
 │
-├── main.py                    # Menu principal (Dev 2)
-├── data\_manager.py           # Gestion des fichiers Excel (Dev 1)
-├── client\_manager.py         # Ajout & validation client (Dev 3)
-├── facture\_manager.py        # Génération facture PDF + cartes (Dev 4)
-├── produit\_manager.py        # Ajout de produit (Dev 5)
+├── main.py                    # Menu principal (Regina)
+├── data\_manager.py           # Gestion des fichiers Excel (Gildas)
+├── client\_manager.py         # Ajout & validation client (Ornelie)
+├── facture\_manager.py        # Génération facture PDF + cartes (Fiacresse)
+├── produit\_manager.py        # Ajout de produit (Vianney)
 │
 ├── fichiers/
 │   ├── Clients.xlsx
