@@ -11,7 +11,6 @@ CARTES_FILE = 'fichiers/CartesReduction.xlsx'
 FACTURE_DIR = "factures/"
 os.makedirs(FACTURE_DIR, exist_ok=True)
 
-
 def selectionner_produits():
     produits_df = pd.read_excel(PRODUITS_FILE)
     print("\n--- Liste des Produits disponibles ---")
@@ -48,7 +47,6 @@ def selectionner_produits():
         print(f" Produit {produit['libelle']} ajouté ({quantite} × {produit['prix_unitaire']} = {ligne_total} F)")
     return produits_selectionnes
 
-
 def calculer_totaux(produits_selectionnes, taux_reduction=0, taux_tva=18):
     total_ht = sum(p['total'] for p in produits_selectionnes)
     montant_reduction = (total_ht * taux_reduction) / 100
@@ -64,7 +62,6 @@ def calculer_totaux(produits_selectionnes, taux_reduction=0, taux_tva=18):
         'total_ttc': total_ttc
     }
 
-
 def choisir_client():
     clients_df = pd.read_excel(CLIENTS_FILE)
     print("\n--- Liste des Clients disponibles ---")
@@ -79,28 +76,22 @@ def choisir_client():
         'ifu': client['IFU']
     }
 
-
 def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf = FPDF()
     pdf.add_page()
     pdf.set_font("Arial", "", 12)
-
     pdf.cell(100, 10, "Groupe Python Génial", ln=0)
     pdf.cell(0, 10, f"Date : {datetime.now().strftime('%d/%m/%Y')}", ln=1, align='R')
-
     pdf.ln(5)
     pdf.set_font("Arial", "B", 12)
     pdf.cell(0, 10, "Informations client :", ln=1)
-
     pdf.set_font("Arial", "", 12)
     pdf.cell(0, 8, f"Nom : {client['nom']}", ln=1)
     pdf.cell(0, 8, f"Contact : {client['contact']}", ln=1)
     pdf.cell(0, 8, f"IFU : {client['ifu']}", ln=1)
-
     pdf.ln(8)
     pdf.set_font("Arial", "B", 14)
     pdf.cell(0, 10, f"FACTURE n° {num_facture:06}", ln=1, align="C")
-
     pdf.ln(5)
     pdf.set_font("Arial", "B", 11)
     headers = ["N°", "Code Produit", "Libellé", "P.U", "Qté", "Total HT"]
@@ -144,18 +135,14 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.output(filename)
     print(f"\n Facture générée : {filename}")
 
-
 def enregistrer_historique(client, produits, totaux, num_facture):
     ligne = {
-        'num_facture': f"{num_facture:06}",
-        'date': datetime.now().strftime('%d/%m/%Y'),
-        'code_client': client['code'],
-        'nom': client['nom'],
-        'total_ht': totaux['total_ht'],
-        'reduction': totaux['reduction'],
-        'total_ht_reduit': totaux['total_ht_reduit'],
-        'tva': totaux['tva'],
-        'total_ttc': totaux['total_ttc']
+        'Index': num_facture,
+        'Date': datetime.now().strftime('%Y-%m-%d'),
+        'N° Facture': f"{num_facture:06}",
+        'Code Client': client['code'],
+        'Nom Client': client['nom'],
+        'Montant TTC': round(totaux['total_ttc'], 2)
     }
 
     historique_df = pd.DataFrame([ligne])
@@ -165,7 +152,6 @@ def enregistrer_historique(client, produits, totaux, num_facture):
 
     historique_df.to_excel(HISTORIQUE_FILE, index=False)
     print("Facture enregistrée dans l’historique.")
-
 
 def verifier_et_ajouter_carte(client, total_ttc):
     if os.path.exists(CARTES_FILE):
@@ -181,7 +167,7 @@ def verifier_et_ajouter_carte(client, total_ttc):
         return
 
     historique_df = pd.read_excel(HISTORIQUE_FILE)
-    nb_factures = historique_df[historique_df['code_client'] == client['code']].shape[0]
+    nb_factures = historique_df[historique_df['Code Client'] == client['code']].shape[0]
 
     if nb_factures < 2:
         print(f" Moins de 2 factures pour {client['nom']}, pas de carte générée.")
@@ -209,7 +195,6 @@ def verifier_et_ajouter_carte(client, total_ttc):
     cartes_df.to_excel(CARTES_FILE, index=False)
     print(f"Carte {reduction}% ajoutée pour {client['nom']}")
 
-
 if __name__ == "__main__":
     client = choisir_client()
     produits = selectionner_produits()
@@ -224,12 +209,9 @@ if __name__ == "__main__":
     num_facture = 1
     if os.path.exists(HISTORIQUE_FILE):
         historique_df = pd.read_excel(HISTORIQUE_FILE)
-        if not historique_df.empty:
-            dernier_num = historique_df['num_facture'].iloc[-1]
-            try:
-                num_facture = int(dernier_num) + 1
-            except:
-                num_facture = 1
+        if not historique_df.empty and 'Index' in historique_df.columns:
+            dernier_num = historique_df['Index'].max()
+            num_facture = int(dernier_num) + 1
 
     generer_facture_pdf(client, produits, totaux, num_facture)
     enregistrer_historique(client, produits, totaux, num_facture)
