@@ -1,4 +1,29 @@
 import pandas as pd 
+import os 
+
+#  Création du fichier cartes_reduction si nécessaire
+def creer_fichier_cartes_reduction():
+    dossier = "./fichiers"
+    fichier_path = f"{dossier}/cartes_reduction.xlsx"
+
+    # Crée le dossier s'il n'existe pas
+    if not os.path.exists(dossier):
+        os.makedirs(dossier)
+
+    # Crée le fichier Excel s'il n'existe pas
+    if not os.path.exists(fichier_path):
+        donnees = {
+            "code_reduction": [],
+            "pourcentage_reduction": [],
+            "valide_jusquau": []
+        }
+        dataframe = pd.DataFrame(donnees)
+        dataframe.to_excel(fichier_path, index=False, engine="openpyxl")
+        print(" Fichier 'cartes_reduction.xlsx' créé avec succès.")
+    else:
+        print(" Le fichier 'cartes_reduction.xlsx' existe déjà.")
+
+
 #lecture du fichier clients et produit 
 clients = pd.read_excel("./fichiers/Clients.xlsx",engine="openpyxl")
 produits = pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl")
