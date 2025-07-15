@@ -12,6 +12,7 @@ def ecrire_clients(nom, contact, code_client, IFU):
         "code_client": [code_client],
         "IFU": [IFU],
     })
+    return nouveau_client
     #function qui permet d'ecrire les produits dans le fichier produits.xlsx
 def ecrire_produits(code_produit, libelle, prix_unitaire):
     nouveau_produit = pd.DataFrame({
@@ -19,18 +20,8 @@ def ecrire_produits(code_produit, libelle, prix_unitaire):
         "libelle": [libelle],
         "prix_unitaire": [prix_unitaire]
     })
+    return nouveau_produit
      
-    
-    #ajout du nouveau client au dataframe existant
-    global clients
-    clients = pd.concat([clients, ecrire_clients], ignore_index=True)
-    #ecriture dans le fichier excel
-    clients.to_excel("./fichiers/Clients.xlsx", index=False, engine="openpyxl")
-    #ajout du nouveau produit au dataframe existant
-    global produits 
-    produits = pd.concat([produits,ecrire_produits], ignore_index=True)
-    #ecriture dans le fichier excel
-    produits.to_excel("./fichiers/Produits.xlsx", index=False, engine="openpyxl")   
    
 #function qui permet de generer un code client 
 def generer_code_client(nom, contact,IFU):
