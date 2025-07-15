@@ -108,15 +108,18 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.cell(60, 6, "Modalité de paiement : 30 jours", ln=1)
 
     # Bloc destinataire
-    pdf.ln(5)
+    pdf.ln(10)  # Ajoute un peu plus d’espace vertical avant le bloc
+
     pdf.set_font("Arial", "B", 11)
-    pdf.cell(0, 8, "Destinataire", ln=5)
+    pdf.cell(0, 8, "Destinataire", ln=1)  # ln=1 = saut de ligne après cette cellule
+
     pdf.set_font("Arial", "", 10)
     pdf.cell(0, 6, "Entreprise", ln=1)
     pdf.cell(0, 6, f"{client['nom']}", ln=1)
     pdf.cell(0, 6, f"{client['contact']}", ln=1)
     pdf.cell(0, 6, "CP Ville", ln=1)
     pdf.cell(0, 6, "France", ln=1)
+
 
     # Titre Facture
     pdf.ln(5)
