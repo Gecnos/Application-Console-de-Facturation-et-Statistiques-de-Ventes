@@ -223,7 +223,7 @@ def enregistrer_historique(client, produits, totaux, num_facture):
             historique_df[col] = historique_df[col].apply(lambda x: f"{x:,.0f} F" if pd.notnull(x) else x)
 
     historique_df.to_excel(HISTORIQUE_FILE, index=False)
-    print("📜 Facture enregistrée dans l’historique.")
+    print("Facture enregistrée dans l’historique.")
 
 
 def verifier_et_ajouter_carte(client, total_ttc):
