@@ -86,13 +86,13 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
 
     # En-tête Entreprise
     pdf.set_font("Arial", "B", 14)
-    pdf.cell(100, 10, "Mon Entreprise / Logo", ln=1)
+    pdf.cell(100, 10, "Groupe numéro 8", ln=1)
     pdf.set_font("Arial", "", 10)
-    pdf.cell(100, 6, "Adresse", ln=1)
-    pdf.cell(100, 6, "CP Ville", ln=1)
-    pdf.cell(100, 6, "France", ln=1)
-    pdf.cell(100, 6, "Email", ln=1)
-    pdf.cell(100, 6, "Téléphone", ln=1)
+    pdf.cell(100, 6, "AWADJIHE Régina", ln=1)
+    pdf.cell(100, 6, "AGBODO Fiacresse", ln=1)
+    pdf.cell(100, 6, "DAYE KANLISOU Gildas", ln=1)
+    pdf.cell(100, 6, "OLOULADE Ornelie", ln=1)
+    pdf.cell(100, 6, "HOUEHO Vianney", ln=1)
 
     # Bloc infos à droite
     pdf.set_xy(130, 10)
