@@ -94,18 +94,10 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.cell(100, 6, "OLOULADE Ornelie", ln=1)
     pdf.cell(100, 6, "HOUEHO Vianney", ln=1)
 
-    # Bloc infos à droite
+    # Date à droite uniquement
     pdf.set_xy(130, 10)
     pdf.set_font("Arial", "", 10)
     pdf.cell(60, 6, f"Date d'émission : {datetime.now().strftime('%d/%m/%Y')}", ln=1)
-    pdf.set_x(130)
-    pdf.cell(60, 6, "Émis par : Contact fournisseur", ln=1)
-    pdf.set_x(130)
-    pdf.cell(60, 6, "Délai de livraison : À réception du paiement", ln=1)
-    pdf.set_x(130)
-    pdf.cell(60, 6, "Mode de livraison : DHL", ln=1)
-    pdf.set_x(130)
-    pdf.cell(60, 6, "Modalité de paiement : 30 jours", ln=1)
 
     # Bloc destinataire
     pdf.ln(10)  # Ajoute un peu plus d’espace vertical avant le bloc
@@ -117,9 +109,8 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.cell(0, 6, "Entreprise", ln=1)
     pdf.cell(0, 6, f"{client['nom']}", ln=1)
     pdf.cell(0, 6, f"{client['contact']}", ln=1)
-    pdf.cell(0, 6, "CP Ville", ln=1)
-    pdf.cell(0, 6, "France", ln=1)
-
+    pdf.cell(0, 6, f"IFU : {client['ifu']}", ln=1)
+    pdf.cell(0, 6, "", ln=1)
 
     # Titre Facture
     pdf.ln(5)
@@ -164,12 +155,6 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
         pdf.cell(30, 8, f"{value:,.0f} F", 0, ln=1, align='R')
         pdf.set_x(resume_x)
 
-    # Offre valide + signature
-    pdf.ln(10)
-    pdf.set_font("Arial", "", 9)
-    pdf.cell(0, 8, "Offre valable jusqu'au xx/xx/2025", ln=1)
-    pdf.cell(0, 8, "Signature", ln=1)
-
     # Montant en lettres
     pdf.ln(10)
     pdf.set_font("Arial", "I", 10)
@@ -179,6 +164,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     filename = os.path.join(FACTURE_DIR, f"facture_{num_facture:06}.pdf")
     pdf.output(filename)
     print(f"\n Facture générée : {filename}")
+
 
 def enregistrer_historique(client, produits, totaux, num_facture):
     ligne = {
