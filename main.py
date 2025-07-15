@@ -2,9 +2,9 @@ import pandas as pd
 from os.path import exists
 from data_manager import (
     creer_fichier_cartes_reduction,
-    ecrire_clients, ecrire_produits,
-    generer_code_client, generer_code_produit
+    ecrire_clients,generer_code_client
 )
+from produit_manager import(ajouter_produit)
 #creation du fichier cartes_reduction si nécessaire
 creer_fichier_cartes_reduction()
 cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
@@ -28,11 +28,4 @@ clients = pd.concat([clients, nouveau_client], ignore_index=True)
 clients.to_excel("./fichiers/Clients.xlsx", index=False, engine="openpyxl")
 print(f"Client '{nom}' enregistré avec le code : {code_client}")
 
-# Saisie des infos produit
-libelle = input("Nom du produit : ")
-prix = float(input("Prix unitaire : "))
-code_produit = generer_code_produit(libelle)
-nouveau_produit = ecrire_produits(code_produit, libelle, prix)
-produits = pd.concat([produits, nouveau_produit], ignore_index=True)
-produits.to_excel("./fichiers/Produits.xlsx", index=False, engine="openpyxl")
-print(f" Produit '{libelle}' enregistré avec le code : {code_produit}")
+ajouter_produit()
