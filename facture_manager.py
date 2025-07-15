@@ -75,65 +75,104 @@ def choisir_client():
         'contact': client['contact'],
         'ifu': client['IFU']
     }
-
 def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf = FPDF()
     pdf.add_page()
-    pdf.set_font("Arial", "", 12)
-    pdf.cell(100, 10, "Groupe Python Génial", ln=0)
-    pdf.cell(0, 10, f"Date : {datetime.now().strftime('%d/%m/%Y')}", ln=1, align='R')
-    pdf.ln(5)
-    pdf.set_font("Arial", "B", 12)
-    pdf.cell(0, 10, "Informations client :", ln=1)
-    pdf.set_font("Arial", "", 12)
-    pdf.cell(0, 8, f"Nom : {client['nom']}", ln=1)
-    pdf.cell(0, 8, f"Contact : {client['contact']}", ln=1)
-    pdf.cell(0, 8, f"IFU : {client['ifu']}", ln=1)
-    pdf.ln(8)
+    pdf.set_auto_page_break(auto=True, margin=15)
+
+    # En-tête Entreprise
     pdf.set_font("Arial", "B", 14)
-    pdf.cell(0, 10, f"FACTURE n° {num_facture:06}", ln=1, align="C")
+    pdf.cell(100, 10, "Mon Entreprise / Logo", ln=1)
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(100, 6, "Adresse", ln=1)
+    pdf.cell(100, 6, "CP Ville", ln=1)
+    pdf.cell(100, 6, "France", ln=1)
+    pdf.cell(100, 6, "Email", ln=1)
+    pdf.cell(100, 6, "Téléphone", ln=1)
+
+    # Bloc infos à droite
+    pdf.set_xy(130, 10)
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(60, 6, f"Date d'émission : {datetime.now().strftime('%d/%m/%Y')}", ln=1)
+    pdf.set_x(130)
+    pdf.cell(60, 6, "Émis par : Contact fournisseur", ln=1)
+    pdf.set_x(130)
+    pdf.cell(60, 6, "Délai de livraison : À réception du paiement", ln=1)
+    pdf.set_x(130)
+    pdf.cell(60, 6, "Mode de livraison : DHL", ln=1)
+    pdf.set_x(130)
+    pdf.cell(60, 6, "Modalité de paiement : 30 jours", ln=1)
+
+    # Bloc destinataire
     pdf.ln(5)
     pdf.set_font("Arial", "B", 11)
-    headers = ["N°", "Code Produit", "Libellé", "P.U", "Qté", "Total HT"]
-    col_widths = [10, 35, 50, 25, 15, 30]
+    pdf.cell(0, 8, "Destinataire", ln=1)
+    pdf.set_font("Arial", "", 10)
+    pdf.cell(0, 6, "Entreprise", ln=1)
+    pdf.cell(0, 6, f"{client['nom']}", ln=1)
+    pdf.cell(0, 6, f"{client['contact']}", ln=1)
+    pdf.cell(0, 6, "CP Ville", ln=1)
+    pdf.cell(0, 6, "France", ln=1)
+
+    # Titre Facture
+    pdf.ln(5)
+    pdf.set_font("Arial", "B", 14)
+    pdf.cell(0, 10, f"Facture Proforma n°{num_facture:06}", ln=1, align="C")
+
+    # Tableau Produits
+    pdf.set_font("Arial", "B", 10)
+    headers = ["Désignation", "Quantité", "Unité", "Prix unitaire HT", "TVA", "TOTAL HT"]
+    col_widths = [60, 25, 20, 35, 20, 30]
 
     for i, h in enumerate(headers):
-        pdf.cell(col_widths[i], 8, h, 1, 0, "C")
+        pdf.cell(col_widths[i], 8, h, 1, 0, 'C')
     pdf.ln()
 
     pdf.set_font("Arial", "", 10)
-    for idx, p in enumerate(produits, start=1):
-        pdf.cell(col_widths[0], 8, str(idx), 1)
-        pdf.cell(col_widths[1], 8, p['code_produit'], 1)
-        pdf.cell(col_widths[2], 8, p['libelle'], 1)
-        pdf.cell(col_widths[3], 8, f"{p['prix_unitaire']}", 1)
-        pdf.cell(col_widths[4], 8, str(p['quantite']), 1)
-        pdf.cell(col_widths[5], 8, f"{p['total']}", 1)
+    for p in produits:
+        pdf.cell(col_widths[0], 8, p['libelle'], 1)
+        pdf.cell(col_widths[1], 8, str(p['quantite']), 1, 0, 'C')
+        pdf.cell(col_widths[2], 8, "pce", 1, 0, 'C')
+        pdf.cell(col_widths[3], 8, f"{p['prix_unitaire']:.0f} F", 1, 0, 'R')
+        pdf.cell(col_widths[4], 8, "18%", 1, 0, 'C')
+        pdf.cell(col_widths[5], 8, f"{p['total']:.0f} F", 1, 0, 'R')
         pdf.ln()
 
+    # Résumé Totaux
     pdf.ln(5)
-    resume_x = 120
+    resume_x = 135
     pdf.set_xy(resume_x, pdf.get_y())
     resume_data = [
         ("Total HT", totaux['total_ht']),
         ("Remise", totaux['reduction']),
         ("THT remise", totaux['total_ht_reduit']),
         ("TVA (18%)", totaux['tva']),
+        ("Frais de port", 0),
         ("Total TTC", totaux['total_ttc'])
     ]
 
+    pdf.set_font("Arial", "", 10)
     for label, value in resume_data:
-        pdf.cell(40, 8, label, 1)
-        pdf.cell(30, 8, f"{value:,.0f} F", 1, ln=1)
+        pdf.cell(40, 8, label, 0)
+        pdf.cell(30, 8, f"{value:,.0f} F", 0, ln=1, align='R')
+        pdf.set_x(resume_x)
 
+    # Offre valide + signature
     pdf.ln(10)
+    pdf.set_font("Arial", "", 9)
+    pdf.cell(0, 8, "Offre valable jusqu’au xx/xx/2025", ln=1)
+    pdf.cell(0, 8, "Signature", ln=1)
+
+    # Montant en lettres
+    pdf.ln(10)
+    pdf.set_font("Arial", "I", 10)
     ttc_lettres = num2words(int(totaux['total_ttc']), lang='fr').capitalize()
-    pdf.set_font("Arial", "I", 11)
-    pdf.multi_cell(0, 10, f"Arrêtée, la présente facture à la somme de : {ttc_lettres} francs CFA")
+    pdf.multi_cell(0, 8, f"Arrêtée, la présente facture à la somme de : {ttc_lettres} francs CFA")
 
     filename = os.path.join(FACTURE_DIR, f"facture_{num_facture:06}.pdf")
     pdf.output(filename)
-    print(f"\n Facture générée : {filename}")
+    print(f"\n✅ Facture générée : {filename}")
+
 
 def enregistrer_historique(client, produits, totaux, num_facture):
     ligne = {
