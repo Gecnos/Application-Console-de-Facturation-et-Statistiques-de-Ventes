@@ -180,7 +180,6 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.output(filename)
     print(f"\n✅ Facture générée : {filename}")
 
-
 def enregistrer_historique(client, produits, totaux, num_facture):
     ligne = {
         'num_facture': f"{num_facture:06}",
@@ -194,13 +193,37 @@ def enregistrer_historique(client, produits, totaux, num_facture):
         'total_ttc': totaux['total_ttc']
     }
 
-    historique_df = pd.DataFrame([ligne])
+    nouvelle_ligne_df = pd.DataFrame([ligne])
+
     if os.path.exists(HISTORIQUE_FILE):
-        ancien = pd.read_excel(HISTORIQUE_FILE)
-        historique_df = pd.concat([ancien, historique_df], ignore_index=True)
+        try:
+            ancien_df = pd.read_excel(HISTORIQUE_FILE)
+
+            # S'assurer que les colonnes correspondent et supprimer les lignes invalides
+            ancien_df = ancien_df[ancien_df.columns.intersection(nouvelle_ligne_df.columns)]
+            historique_df = pd.concat([ancien_df, nouvelle_ligne_df], ignore_index=True)
+
+            # Supprimer les lignes entièrement vides
+            historique_df.dropna(how='all', inplace=True)
+
+            # Trier par numéro de facture si possible
+            if 'num_facture' in historique_df.columns:
+                historique_df['num_facture'] = historique_df['num_facture'].astype(str)
+                historique_df = historique_df.sort_values(by='num_facture')
+
+        except Exception as e:
+            print(f"Erreur lecture historique : {e}")
+            historique_df = nouvelle_ligne_df
+    else:
+        historique_df = nouvelle_ligne_df
+
+    # Formater les totaux en F CFA avec séparateurs
+    for col in ['total_ht', 'reduction', 'total_ht_reduit', 'tva', 'total_ttc']:
+        if col in historique_df.columns:
+            historique_df[col] = historique_df[col].apply(lambda x: f"{x:,.0f} F" if pd.notnull(x) else x)
 
     historique_df.to_excel(HISTORIQUE_FILE, index=False)
-    print("Facture enregistrée dans l’historique.")
+    print("📜 Facture enregistrée dans l’historique.")
 
 
 def verifier_et_ajouter_carte(client, total_ttc):
