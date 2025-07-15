@@ -5,10 +5,10 @@ produits = pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl")
 cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
 
 #function qui permet d'ecrire les clients dans le fichier clients.xlsx
-def ecrire_clients(nom, prenom, code_client, IFU):
+def ecrire_clients(nom, contact, code_client, IFU):
     nouveau_client = pd.DataFrame({
         "nom": [nom],
-        "prenom": [prenom],
+        "contact": [contact],
         "code_client": [code_client],
         "IFU": [IFU],
     })
@@ -33,13 +33,13 @@ def ecrire_produits(code_produit, libelle, prix_unitaire):
     produits.to_excel("./fichiers/Produits.xlsx", index=False, engine="openpyxl")   
    
 #function qui permet de generer un code client 
-def generer_code_client(nom, prenom,IFU):
-    code = nom[:3].upper() + prenom[:3].upper() + IFU[-3:]
+def generer_code_client(nom, contact,IFU):
+    code = nom[:3].lower() + contact[:3].upper() + IFU[-3:]
     return code
 
 #function qui permet de generer un code produit
-def generer_code_produit(nom_produit):
-    code = nom_produit[:3].upper() + str(len(nom_produit))
+def generer_code_produit(libelle):
+    code = libelle[:3].lower() + str(len(libelle))
     return code
 
 
