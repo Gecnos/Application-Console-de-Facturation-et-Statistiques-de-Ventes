@@ -156,12 +156,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
         pdf.cell(30, 8, f"{value:,.0f} F", 0, ln=1, align='R')
         pdf.set_x(resume_x)
 
-    # Offre valide + signature
-    pdf.ln(10)
-    pdf.set_font("Arial", "", 9)
-    pdf.cell(0, 8, "Offre valable jusqu'au xx/xx/2025", ln=1)
-    pdf.cell(0, 8, "Signature", ln=1)
-
+    
     # Montant en lettres
     pdf.ln(10)
     pdf.set_font("Arial", "I", 10)
