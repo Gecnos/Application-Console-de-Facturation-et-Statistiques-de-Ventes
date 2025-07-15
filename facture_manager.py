@@ -178,7 +178,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
 
     filename = os.path.join(FACTURE_DIR, f"facture_{num_facture:06}.pdf")
     pdf.output(filename)
-    print(f"\n✅ Facture générée : {filename}")
+    print(f"\n Facture générée : {filename}")
 
 def enregistrer_historique(client, produits, totaux, num_facture):
     ligne = {
