@@ -33,11 +33,11 @@ from data_manager import (
     ecrire_clients, ecrire_produits,
     generer_code_client, generer_code_produit
 )
-
-# 📁 Création du fichier de la carte de réduction si nécessaire
+#creation du fichier cartes_reduction si nécessaire
 creer_fichier_cartes_reduction()
+cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
 
-# 📥 Chargement des fichiers Excel
+#  Chargement des fichiers Excel
 clients = pd.read_excel("./fichiers/Clients.xlsx", engine="openpyxl") \
     if exists("./fichiers/Clients.xlsx") else pd.DataFrame(columns=["nom", "contact", "code_client", "IFU"])
 
@@ -46,7 +46,7 @@ produits = pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl") \
 
 cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
 
-# 🧍 Saisie des infos client
+#  Saisie des infos client
 nom = input("Nom du client : ")
 contact = input("Contact du client : ")
 IFU = input("IFU du client : ")
@@ -54,13 +54,13 @@ code_client = generer_code_client(nom, contact, IFU)
 nouveau_client = ecrire_clients(nom, contact, code_client, IFU)
 clients = pd.concat([clients, nouveau_client], ignore_index=True)
 clients.to_excel("./fichiers/Clients.xlsx", index=False, engine="openpyxl")
-print(f"✅ Client '{nom}' enregistré avec le code : {code_client}")
+print(f"Client '{nom}' enregistré avec le code : {code_client}")
 
-# 📦 Saisie des infos produit
+#  Saisie des infos produit
 libelle = input("Nom du produit : ")
 prix = float(input("Prix unitaire : "))
 code_produit = generer_code_produit(libelle)
 nouveau_produit = ecrire_produits(code_produit, libelle, prix)
 produits = pd.concat([produits, nouveau_produit], ignore_index=True)
 produits.to_excel("./fichiers/Produits.xlsx", index=False, engine="openpyxl")
-print(f"✅ Produit '{libelle}' enregistré avec le code : {code_produit}")
+print(f" Produit '{libelle}' enregistré avec le code : {code_produit}")
