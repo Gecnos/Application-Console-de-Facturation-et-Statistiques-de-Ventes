@@ -1,6 +1,6 @@
 import pandas as pd
 from os.path import exists
-from fonctions import (ecrire_clients, ecrire_produits, generer_code_client, generer_code_produit)
+from data_manager import (ecrire_clients, ecrire_produits, generer_code_client, generer_code_produit)
 
 # Chargement des fichiers Excel
 clients = pd.read_excel("./fichiers/Clients.xlsx", engine="openpyxl") if exists("./fichiers/Clients.xlsx") else pd.DataFrame(columns=["nom", "contact", "code_client", "IFU"])
