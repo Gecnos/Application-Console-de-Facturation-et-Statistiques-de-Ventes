@@ -110,7 +110,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     # Bloc destinataire
     pdf.ln(5)
     pdf.set_font("Arial", "B", 11)
-    pdf.cell(0, 8, "Destinataire", ln=1)
+    pdf.cell(0, 8, "Destinataire", ln=2)
     pdf.set_font("Arial", "", 10)
     pdf.cell(0, 6, "Entreprise", ln=1)
     pdf.cell(0, 6, f"{client['nom']}", ln=1)
