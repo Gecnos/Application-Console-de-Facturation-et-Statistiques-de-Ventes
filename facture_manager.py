@@ -206,6 +206,9 @@ def enregistrer_historique(client, produits, totaux, num_facture):
             # Supprimer les lignes entièrement vides
             historique_df.dropna(how='all', inplace=True)
 
+            # Supprimer les doublons éventuels
+            historique_df.drop_duplicates(subset=['num_facture', 'code_client'], keep='last', inplace=True)
+
             # Trier par numéro de facture si possible
             if 'num_facture' in historique_df.columns:
                 historique_df['num_facture'] = historique_df['num_facture'].astype(str)
@@ -217,13 +220,15 @@ def enregistrer_historique(client, produits, totaux, num_facture):
     else:
         historique_df = nouvelle_ligne_df
 
-    # Formater les totaux en F CFA avec séparateurs
+    # Formater les totaux uniquement si ce sont des nombres
     for col in ['total_ht', 'reduction', 'total_ht_reduit', 'tva', 'total_ttc']:
         if col in historique_df.columns:
-            historique_df[col] = historique_df[col].apply(lambda x: f"{x:,.0f} F" if pd.notnull(x) else x)
+            historique_df[col] = pd.to_numeric(historique_df[col], errors='coerce')
+            historique_df[col] = historique_df[col].apply(lambda x: f"{x:,.0f} F" if pd.notnull(x) else '')
 
     historique_df.to_excel(HISTORIQUE_FILE, index=False)
     print("Facture enregistrée dans l’historique.")
+
 
 
 def verifier_et_ajouter_carte(client, total_ttc):
