@@ -99,11 +99,12 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.set_font("Arial", "", 10)
     pdf.cell(60, 6, f"Date d'émission : {datetime.now().strftime('%d/%m/%Y')}", ln=1)
 
-    # Bloc destinataire
-    pdf.ln(10)  # Ajoute un peu plus d’espace vertical avant le bloc
+    # Revenir à gauche après le bloc de droite
+    pdf.set_xy(10, 50)  # Ajuste ici selon la hauteur du bloc de droite
 
+    # Bloc destinataire
     pdf.set_font("Arial", "B", 11)
-    pdf.cell(0, 8, "Destinataire", ln=1)  # ln=1 = saut de ligne après cette cellule
+    pdf.cell(0, 8, "Destinataire", ln=1)
 
     pdf.set_font("Arial", "", 10)
     pdf.cell(0, 6, "Entreprise", ln=1)
@@ -154,6 +155,12 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
         pdf.cell(40, 8, label, 0)
         pdf.cell(30, 8, f"{value:,.0f} F", 0, ln=1, align='R')
         pdf.set_x(resume_x)
+
+    # Offre valide + signature
+    pdf.ln(10)
+    pdf.set_font("Arial", "", 9)
+    pdf.cell(0, 8, "Offre valable jusqu'au xx/xx/2025", ln=1)
+    pdf.cell(0, 8, "Signature", ln=1)
 
     # Montant en lettres
     pdf.ln(10)
