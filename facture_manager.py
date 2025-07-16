@@ -64,10 +64,9 @@ def calculer_totaux(produits_selectionnes, taux_reduction=0, taux_tva=18):
         'total_ttc': total_ttc
     }
 
-
 def choisir_client():
     clients_df = pd.read_excel(CLIENTS_FILE)
-    print("\n--- Liste des Clients disponibles ---")
+    print("\n Liste des Clients disponibles")
     print(clients_df[['code_client', 'nom', 'contact', 'IFU']])
     code = input("Entrez le code du client : ").strip()
     client = clients_df[clients_df['code_client'] == code].iloc[0]
@@ -84,7 +83,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.add_page()
     pdf.set_auto_page_break(auto=True, margin=15)
 
-    # En-tête Entreprise
+    # En-tête
     pdf.set_font("Arial", "B", 14)
     pdf.cell(100, 10, "Groupe numéro 8", ln=1)
     pdf.set_font("Arial", "", 10)
@@ -94,18 +93,15 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.cell(100, 6, "OLOULADE Ornelie", ln=1)
     pdf.cell(100, 6, "HOUEHO Vianney", ln=1)
 
-    # Date à droite uniquement
+    # Date à droite
     pdf.set_xy(130, 10)
     pdf.set_font("Arial", "", 10)
     pdf.cell(60, 6, f"Date d'émission : {datetime.now().strftime('%d/%m/%Y')}", ln=1)
 
-    # Revenir à gauche après le bloc de droite
-    pdf.set_xy(10, 50)  # Ajuste ici selon la hauteur du bloc de droite
-
     # Bloc destinataire
+    pdf.set_xy(10, 50)
     pdf.set_font("Arial", "B", 11)
     pdf.cell(0, 8, "Destinataire", ln=1)
-
     pdf.set_font("Arial", "", 10)
     pdf.cell(0, 6, "Entreprise", ln=1)
     pdf.cell(0, 6, f"{client['nom']}", ln=1)
@@ -113,12 +109,12 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
     pdf.cell(0, 6, f"IFU : {client['ifu']}", ln=1)
     pdf.cell(0, 6, "", ln=1)
 
-    # Titre Facture
+    # Titre
     pdf.ln(5)
     pdf.set_font("Arial", "B", 14)
     pdf.cell(0, 10, f"Facture Proforma n°{num_facture:06}", ln=1, align="C")
 
-    # Tableau Produits
+    # Tableau des produits
     pdf.set_font("Arial", "B", 10)
     headers = ["Désignation", "Quantité", "Unité", "Prix unitaire HT", "TVA", "TOTAL HT"]
     col_widths = [60, 25, 20, 35, 20, 30]
@@ -137,7 +133,7 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
         pdf.cell(col_widths[5], 8, f"{p['total']:.0f} F", 1, 0, 'R')
         pdf.ln()
 
-    # Résumé Totaux
+    # Résumé des totaux
     pdf.ln(5)
     resume_x = 135
     pdf.set_xy(resume_x, pdf.get_y())
@@ -156,7 +152,6 @@ def generer_facture_pdf(client, produits, totaux, num_facture):
         pdf.cell(30, 8, f"{value:,.0f} F", 0, ln=1, align='R')
         pdf.set_x(resume_x)
 
-    
     # Montant en lettres
     pdf.ln(10)
     pdf.set_font("Arial", "I", 10)
@@ -186,29 +181,19 @@ def enregistrer_historique(client, produits, totaux, num_facture):
     if os.path.exists(HISTORIQUE_FILE):
         try:
             ancien_df = pd.read_excel(HISTORIQUE_FILE)
-
-            # S'assurer que les colonnes correspondent et supprimer les lignes invalides
             ancien_df = ancien_df[ancien_df.columns.intersection(nouvelle_ligne_df.columns)]
             historique_df = pd.concat([ancien_df, nouvelle_ligne_df], ignore_index=True)
-
-            # Supprimer les lignes entièrement vides
             historique_df.dropna(how='all', inplace=True)
-
-            # Supprimer les doublons éventuels
             historique_df.drop_duplicates(subset=['num_facture', 'code_client'], keep='last', inplace=True)
-
-            # Trier par numéro de facture si possible
             if 'num_facture' in historique_df.columns:
                 historique_df['num_facture'] = historique_df['num_facture'].astype(str)
                 historique_df = historique_df.sort_values(by='num_facture')
-
         except Exception as e:
             print(f"Erreur lecture historique : {e}")
             historique_df = nouvelle_ligne_df
     else:
         historique_df = nouvelle_ligne_df
 
-    # Formater les totaux uniquement si ce sont des nombres
     for col in ['total_ht', 'reduction', 'total_ht_reduit', 'tva', 'total_ttc']:
         if col in historique_df.columns:
             historique_df[col] = pd.to_numeric(historique_df[col], errors='coerce')
@@ -216,7 +201,6 @@ def enregistrer_historique(client, produits, totaux, num_facture):
 
     historique_df.to_excel(HISTORIQUE_FILE, index=False)
     print("Facture enregistrée dans l’historique.")
-
 
 
 def verifier_et_ajouter_carte(client, total_ttc):
@@ -260,6 +244,7 @@ def verifier_et_ajouter_carte(client, total_ttc):
     cartes_df = pd.concat([cartes_df, pd.DataFrame([nouvelle_carte])], ignore_index=True)
     cartes_df.to_excel(CARTES_FILE, index=False)
     print(f"Carte {reduction}% ajoutée pour {client['nom']}")
+
 
 
 if __name__ == "__main__":
