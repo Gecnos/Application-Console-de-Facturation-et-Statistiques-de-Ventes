@@ -14,7 +14,7 @@ os.makedirs(FACTURE_DIR, exist_ok=True)
 
 def selectionner_produits():
     produits_df = pd.read_excel(PRODUITS_FILE)
-    print("\n--- Liste des Produits disponibles ---")
+    print("\n Liste des Produits disponibles")
     print(produits_df[['code_produit', 'libelle', 'prix_unitaire']])
     produits_selectionnes = []
 
@@ -252,7 +252,7 @@ if __name__ == "__main__":
     produits = selectionner_produits()
     totaux = calculer_totaux(produits, taux_reduction=5)
 
-    print("\n--- Totaux Calculés ---")
+    print("\n Totaux Calculés ")
     print(f"Total HT : {totaux['total_ht']} F")
     print(f"Réduction : {totaux['reduction']} F")
     print(f"TVA : {totaux['tva']} F")
