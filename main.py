@@ -1,6 +1,4 @@
-<<<<<<< HEAD
 
-=======
 import pandas as pd
 from os.path import exists
 from data_manager import (
@@ -8,6 +6,8 @@ from data_manager import (
     ecrire_clients,generer_code_client
 )
 from produit_manager import(ajouter_produit)
+from client_manager import (ajouter_client)
+from client_manager import (recherche_client)
 #creation du fichier cartes_reduction si nécessaire
 creer_fichier_cartes_reduction()
 cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
@@ -32,4 +32,3 @@ clients.to_excel("./fichiers/Clients.xlsx", index=False, engine="openpyxl")
 print(f"Client '{nom}' enregistré avec le code : {code_client}")
 
 ajouter_produit()
->>>>>>> b7116766681e9dc6e16e36814a265ceb83e2f9af

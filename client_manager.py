@@ -1,5 +1,6 @@
 
 # client_manager.py
+from genericpath import exists
 import pandas as pd
 import os
 
@@ -61,25 +62,35 @@ def ajouter_client():
         else:
             print("\nRéponse invalide. Veuillez répondre par 'y' ou 'n'.")
 ajouter_client()
+
 def recherche_client():
     dossier = "fichiers"
     fichiers = "Clients.xlsx"
     chemin = os.path.join(dossier, fichiers)
     df = pd.read_excel(chemin, index_col='code_client')
-    #recherche d'un client
+    
     while True: 
         code_client = input("\nEntrez le code du client à rechercher (ou 'q' pour quitter) : ").strip()
         if code_client.lower() == 'q':  
             print("Recherche annulée.")
             return
+        # Vérification si le code_client existe ça affiche  ça affiche les information correspond aux client si non ça renvoie un message d'erreur
+        if code_client == "" or not code_client.startswith("C") or not code_client[1:].isdigit():
+            print("Le code client doit commencer par 'C' suivi de chiffres. Veuillez réessayer.")
+            continue
+        elif not exists(chemin):
+            print("Le fichier des clients n'existe pas.")
+            return
+        elif not df.empty and df.index.dtype == 'object':
+            df.index = df.index.astype(str)
 
-        if code_client in df.index:
-            print("\nVoici les informations du client :")
-            print(f"\nCode: {code_client}")
-            print(f"\nNom: {df.loc[code_client, 'nom']}")
-            print(f"\nContact: {df.loc[code_client, 'contact']}")
-            print(f"\nIFU: {df.loc[code_client, 'ifu']}")
-        else:
-            print("Client non trouvé. Veuillez réessayer.")
-            break
+        elif code_client not in df.index:
+            print("Le code client n'existe pas. Veuillez réessayer.")
+            continue
+        print("\nVoici les informations du client :")
+        print(f"\nCode: {code_client}")
+        print(f"\nNom: {df.loc[code_client, 'nom']}")
+        print(f"\nContact: {df.loc[code_client, 'contact']}")
+        if 'ifu' in df.columns:
+         print(f"\nIFU: {df.loc[code_client, 'ifu']}")
 recherche_client()
