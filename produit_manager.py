@@ -44,4 +44,3 @@ def ajouter_produit():
         else:
             print("\nRéponse invalide. Veuillez répondre par 'y' ou 'n'.")
 
-ajouter_produit()
