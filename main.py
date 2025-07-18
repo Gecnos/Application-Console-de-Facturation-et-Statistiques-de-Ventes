@@ -18,7 +18,7 @@ def afficher_menu():
 def main():
     while True:
         afficher_menu()
-        choix = input("\n👉 Entrez votre choix (1/a/b/c/2/3/4) : ").strip().lower()
+        choix = input("\n Entrez votre choix (1/a/b/c/2/3/4) : ").strip().lower()
 
         if choix == "1" or choix == "a":
             ajouter_client('nom','contact','IFU','code_client','clients','produits','cartes',)
