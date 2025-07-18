@@ -31,7 +31,7 @@ def main():
         elif choix == "3":
             ajouter_produit()
         elif choix == "4":
-            print("👋 Au revoir, Gildas !")
+            print(" Au revoir, et a la prochaine!")
             break
         else:
             print("Choix invalide, essaie encore.")
