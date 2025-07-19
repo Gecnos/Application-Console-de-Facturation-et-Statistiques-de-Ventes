@@ -274,6 +274,4 @@ def creer_facture():
                 print(f" Moins de 2 factures pour {client_info['nom']}, pas de carte générée.")
 
 
-if __name__ == "__main__":
-    creer_facture()
-
+# creer_facture()

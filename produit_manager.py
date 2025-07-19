@@ -43,4 +43,4 @@ def ajouter_produit():
             break
         else:
             print("\nRéponse invalide. Veuillez répondre par 'y' ou 'n'.")
-
+# ajouter_produit()

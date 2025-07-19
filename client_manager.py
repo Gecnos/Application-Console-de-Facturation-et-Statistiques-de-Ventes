@@ -102,3 +102,4 @@ def recherche_client():
         if 'ifu' in df.columns:
          print(f"\nIFU: {df.loc[code_client, 'ifu']}")
 # recherche_client()
+# ajouter_client()
