@@ -10,12 +10,25 @@ def ajouter_client():
     fichiers = "Clients.xlsx"
     chemin = os.path.join(dossier, fichiers)
 
-   
-    df = pd.read_excel(chemin, index_col='code_client')
-    code= df.index[-1]
-    nbr = int(code[1:])
-    code_new = f"C{nbr + 1:03d}"
-    
+    if not os.path.exists(chemin):
+        df = pd.DataFrame(columns=['nom', 'contact', 'ifu'])
+        code_new = "C001"
+    else:
+        df = pd.read_excel(chemin, index_col='code_client')
+        if df.empty:
+            code_new = "C001"
+        else:
+            # Essayer de trouver le plus grand numéro parmi les codes C
+            max_num = 0
+            for code in df.index:
+                if isinstance(code, str) and code.startswith('C'):
+                    try:
+                        num = int(code[1:])
+                        if num > max_num:
+                            max_num = num
+                    except ValueError:
+                        continue
+            code_new = f"C{max_num + 1:03d}"
 
     print("\nVoulez-vous enregistrer un nouveau client ?")
     print(f"\n le client {code_new} sera ajouté à la suite des clients existants")
@@ -35,11 +48,6 @@ def ajouter_client():
             break
         print("L'IFU doit contenir 13 chiffres.")
 
-    if not os.path.exists(chemin):
-        df = pd.DataFrame(columns=['nom', 'contact', 'ifu'])
-    else:
-        df = pd.read_excel(chemin, index_col='code_client')
-   
     if nom == "" or contact == "" or ifu == "":
         print("\nTous les champs doivent être remplis. Veuillez réessayer.")
         return  
