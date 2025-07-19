@@ -247,27 +247,3 @@ def verifier_et_ajouter_carte(client, total_ttc):
 
 
 
-if __name__ == "__main__":
-    client = choisir_client()
-    produits = selectionner_produits()
-    totaux = calculer_totaux(produits, taux_reduction=5)
-
-    print("\n Totaux Calculés ")
-    print(f"Total HT : {totaux['total_ht']} F")
-    print(f"Réduction : {totaux['reduction']} F")
-    print(f"TVA : {totaux['tva']} F")
-    print(f"Total TTC : {totaux['total_ttc']} F")
-
-    num_facture = 1
-    if os.path.exists(HISTORIQUE_FILE):
-        historique_df = pd.read_excel(HISTORIQUE_FILE)
-        if not historique_df.empty:
-            dernier_num = historique_df['num_facture'].iloc[-1]
-            try:
-                num_facture = int(dernier_num) + 1
-            except:
-                num_facture = 1
-
-    generer_facture_pdf(client, produits, totaux, num_facture)
-    enregistrer_historique(client, produits, totaux, num_facture)
-    verifier_et_ajouter_carte(client, totaux['total_ttc'])

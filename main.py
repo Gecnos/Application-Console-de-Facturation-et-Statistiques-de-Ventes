@@ -4,6 +4,7 @@ from os.path import exists
 from data_manager import (ajouter_client)
 from produit_manager import(ajouter_produit)
 from client_manager import(recherche_client)
+from facture_manager import (verifier_et_ajouter_carte, choisir_client, selectionner_produits, calculer_totaux)
 
 def afficher_menu():
     print("\n=== Menu Principal ===")
