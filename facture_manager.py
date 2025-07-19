@@ -3,6 +3,7 @@ from fpdf import FPDF
 from num2words import num2words
 from datetime import datetime
 import os
+from client_manager import ajouter_client
 
 PRODUITS_FILE = 'fichiers/Produits.xlsx'
 CLIENTS_FILE = 'fichiers/Clients.xlsx'
@@ -17,8 +18,27 @@ def creer_facture():
     clients_df = pd.read_excel(CLIENTS_FILE)
     print("\n Liste des Clients disponibles")
     print(clients_df[['code_client', 'nom', 'contact', 'IFU']])
-    code = input("Entrez le code du client : ").strip()
-    client = clients_df[clients_df['code_client'] == code].iloc[0]
+    
+    while True:
+        code = input("Entrez le code du client : ").strip()
+        
+        # Vérifier si le client existe
+        if code in clients_df['code_client'].values:
+            client = clients_df[clients_df['code_client'] == code].iloc[0]
+            break
+        else:
+            print(f"\nLe client avec le code '{code}' n'existe pas.")
+            choix = input("Voulez-vous créer un nouveau client ? (y/n) : ").lower()
+            if choix == 'y':
+                ajouter_client()
+                # Recharger la liste des clients après ajout
+                clients_df = pd.read_excel(CLIENTS_FILE)
+                print("\n Liste des Clients disponibles (mise à jour)")
+                print(clients_df[['code_client', 'nom', 'contact', 'IFU']])
+            else:
+                print("Veuillez entrer un code client valide.")
+                continue
+    
     client_info = {
         'code': client['code_client'],
         'nom': client['nom'],
@@ -252,4 +272,8 @@ def creer_facture():
                     print(f" Montant insuffisant pour carte ({totaux['total_ttc']} F)")
             else:
                 print(f" Moins de 2 factures pour {client_info['nom']}, pas de carte générée.")
+
+
+if __name__ == "__main__":
+    creer_facture()
 
