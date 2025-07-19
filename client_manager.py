@@ -61,7 +61,7 @@ def ajouter_client():
             break
         else:
             print("\nRéponse invalide. Veuillez répondre par 'y' ou 'n'.")
-ajouter_client()
+# ajouter_client()
 
 def recherche_client():
     dossier = "fichiers"
@@ -93,4 +93,4 @@ def recherche_client():
         print(f"\nContact: {df.loc[code_client, 'contact']}")
         if 'ifu' in df.columns:
          print(f"\nIFU: {df.loc[code_client, 'ifu']}")
-recherche_client()
+# recherche_client()

@@ -52,15 +52,15 @@ def generer_code_produit(libelle):
 
 #function qui permet de creer le fichier de la carte de reduction 
 
-def creer_fichier_cartes_reduction():
-    donnees={
-        "code_reduction":[],
-        "pourcenntage_reduction":[],
-        "valide_jusquau":[]
-    }
-    #creation du dataframe vide 
-    dataframe = pd.DataFrame(donnees)
-    dataframe.to_excel("./fichiers/cartes_reduction.xlsx", index=False, engine="openpyxl")
+# def creer_fichier_cartes_reduction():
+#     donnees={
+#         "code_reduction":[],
+#         "pourcenntage_reduction":[],
+#         "valide_jusquau":[]
+#     }
+#     #creation du dataframe vide 
+#     dataframe = pd.DataFrame(donnees)
+#     dataframe.to_excel("./fichiers/cartes_reduction.xlsx", index=False, engine="openpyxl")
     
 
 #function de verification de l'existance des codes 
@@ -98,7 +98,7 @@ def ajouter_client(nom,contact,IFU,code_client,clients,produits,cartes):
     produits = pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl") \
         if exists("./fichiers/Produits.xlsx") else pd.DataFrame(columns=["code_produit", "libelle", "prix_unitaire"])
 
-    cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
+    # cartes = pd.read_excel("./fichiers/cartes_reduction.xlsx", engine="openpyxl")
 
     
  # Saisie des infos client
