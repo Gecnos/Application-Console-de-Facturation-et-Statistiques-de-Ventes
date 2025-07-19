@@ -25,8 +25,13 @@ def creer_fichier_cartes_reduction():
 
 
 #lecture du fichier clients et produit 
-clients = pd.read_excel("./fichiers/Clients.xlsx",engine="openpyxl")
-produits = pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl")
+def lire_clients():
+    return pd.read_excel("./fichiers/Clients.xlsx",engine="openpyxl")
+
+def lire_produits():
+    return pd.read_excel("./fichiers/Produits.xlsx", engine="openpyxl")
+def lire_cartes_reduction():
+    return pd.read_excel("./fichiers/CartesReduction.xlsx", engine="openpyxl")
 
 
     #function qui permet d'ecrire les produits dans le fichier produits.xlsx
